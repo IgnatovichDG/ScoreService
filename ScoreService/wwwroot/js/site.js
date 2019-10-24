@@ -11,7 +11,7 @@ function checkCanSend() {
     var textAreas = document.querySelectorAll('.team-estimate-criteria__area__text');
     var filledAreasCount = calcFilledAreasCount(form);
 
-    var isValidForm = radioGroups.length === checkedRadiosCount && textAreas.length === filledAreasCount;
+    var isValidForm = radioGroups.length === checkedRadiosCount;
     isValidForm ? sendButton.classList.remove('disabled') : sendButton.classList.add('disabled');
 }
 

@@ -25,7 +25,7 @@ namespace ScoreService.Services
 
         public async Task<bool> IsUserExistAsync(string login, string password)
         {
-            var user = await _context.Set<UserEntity>().FirstOrDefaultAsync(p => p.Login == login);
+            var user = await _context.Set<UserEntity>().FirstOrDefaultAsync(p => p.Login.ToLower() == login.ToLower());
             if (user == null)
                 return false;
             var paswordHash = _hashGenerator.ComputePasswordHash(password, user.PasswordSalt);

@@ -1,0 +1,24 @@
+﻿@using ScoreService.ViewModel
+@model WipeItModel
+@{
+    ViewBag.Title = "Upload";
+    Layout = "_Layout";
+}
+<div class="container">
+    <form method="post" enctype="multipart/form-data" asp-controller="Wipe" asp-action="DeleteAll">
+
+           
+        <br/>
+        <label> Код смерти:</label>
+        <input type="password"  asp-for="PasswordOfDead"/>
+        <br/>
+        @*<span asp-validation-for="File"></span>*@
+
+        <div asp-validation-summary="All"></div>
+
+        <button type="submit">
+            Убить всех человеков.
+        </button>
+
+    </form>
+</div>
