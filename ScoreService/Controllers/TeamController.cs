@@ -32,11 +32,10 @@ namespace ScoreService.Controllers
 
         [HttpPost("score")]
         public async Task<IActionResult> Score([FromBody]ScoreModel model)
-        {
+        {                
             var login = User.Identity.Name;
             await _teamService.SaveScoreAsync(model, login);
-                
-            return Content("/");
+            return Ok();
         }
     }
 }

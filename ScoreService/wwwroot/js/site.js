@@ -42,40 +42,27 @@ function sendData() {
         Categories: categories
     };
 
-    $.ajax({
-        url: '/team/score',
-        dataType: 'json',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/team/score", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                window.location.href = '/';
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+    };
+    xhr.send(JSON.stringify({
             TeamId: 1,
             TeamName: "kek",
             Categories: categories
-        }),
-        processData: false,
-        success: function(data, textStatus, jQxhr) {
-            $(window.location('/'));
-        },
-        error: function(jqXhr, textStatus, errorThrown) {
-            console.log(errorThrown);
-        }
-    });
+        }));
 }
-
-    //var xhr = new XMLHttpRequest();
-    //xhr.open("POST", '/team/score', true);
-    //xhr.setRequestHeader('Content-Type', 'application/json');
-    //xhr.onload = function () {
-    //    console.log('kekekke');
-    //    //    window.location('/');
-    //};
-
-    //xhr.send(JSON.stringify({
-    //    TeamId: 1,
-    //    TeamName: "kek",
-    //    Categories: categories
-    //}));
-
 
 function calcRadioCheckedCount(form) {
     var count = 0;

@@ -6,7 +6,7 @@
 }
 <div class="team-estimate-view__container">
     <div class="team-estimate-view">
-        <form id="team-estimate-form">
+        <div id="team-estimate-form">
             <div class="team-list-view__title">@Model.TeamName</div>
             <input id="teamName" teamName="@Model.TeamName" hidden />
             <input id="teamId" teamId="@Model.TeamId" hidden />
@@ -59,7 +59,7 @@
 
                 }
             </div>
-            <input type="submit" class="team-estimate__send-button disabled" value="Отправить оценку" onclick="sendData()">
-        </form>
+            <button class="team-estimate__send-button disabled" value="" onclick="sendData()">Отправить оценку</button>
+        </div>
     </div>
 </div>
