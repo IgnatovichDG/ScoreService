@@ -11,7 +11,7 @@ namespace ScoreService.Entities
 
         public TeamEntity Team { get; set; }
 
-        public int Score { get; set; }
+        public string Score { get; set; }
 
         public ScoreCategoryEntity Category { get; set; }
 

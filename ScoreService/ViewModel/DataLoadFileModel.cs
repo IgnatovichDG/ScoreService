@@ -10,12 +10,4 @@ namespace ScoreService.ViewModel
 
         public string ProtectionString { get; set; }
     }
-
-    public enum FileLoadType
-    {
-        Unknown,
-        Users,
-        UserTeam,
-        Categories
-    }
 }

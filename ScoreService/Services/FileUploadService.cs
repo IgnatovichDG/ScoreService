@@ -10,11 +10,6 @@ using ScoreService.ViewModel;
 
 namespace ScoreService.Services
 {
-    public interface IFileUploadService
-    {
-        Task UploadAsync(FileLoadType fileLoadType, byte[] content);
-    }
-
     public class FileUploadService : IFileUploadService
     {
         private readonly IUserService _userService;

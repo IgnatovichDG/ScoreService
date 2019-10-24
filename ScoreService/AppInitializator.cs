@@ -6,12 +6,6 @@ using ScoreService.Infrastructure;
 
 namespace ScoreService
 {
-
-    public interface IAppInitializator
-    {
-        Task PrepareAsync();
-    }
-
     public class AppInitializator : IAppInitializator
     {
         private readonly SSDbContext _context;
