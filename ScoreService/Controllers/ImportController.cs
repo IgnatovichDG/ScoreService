@@ -21,7 +21,7 @@ namespace ScoreService.Controllers
         }
 
         [HttpGet("upload")]
-        public async Task<IActionResult> Upload(FileLoadType type)
+        public IActionResult Upload(FileLoadType type)
         {
             return AutoView(new DataLoadFileModel()
             {

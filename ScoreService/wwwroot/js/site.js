@@ -16,15 +16,31 @@ function checkCanSend() {
 }
 
 function sendData() {
+    var teamName = $("#teamName").attr("tName");
+    var teamId = $("#teamId").attr("tId");
     var categories = [];
     var textAreas = document.querySelectorAll('.team-estimate-criteria__area__text');
     textAreas.forEach(p => {
-        console.log(p);
         categories.push({
-            Id: p.getAttribute('catId'),            
+            Id: p.getAttribute('catId'),
             Value: p.value
         });
     });
+
+    var radioGroups = $(".team-estimate-criteria__marks").get();
+    radioGroups.forEach(p => {
+        var inputs = p.getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].checked) {
+                categories.push({
+                    Id: inputs[i].getAttribute("cid"),
+                    Value: inputs[i].value
+                });
+            }
+        }
+    });
+
+    // radioGroups.forEach(p => );
 
     //var radioGroups = document.querySelectorAll('.team-estimate-criteria__marks');
     //radioGroups.forEach( p=>
@@ -36,11 +52,6 @@ function sendData() {
     //}));
     //}
 
-    var result = {
-        TeamId: 0,
-        TeamName: "",
-        Categories: categories
-    };
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/team/score", true);
@@ -58,10 +69,10 @@ function sendData() {
         console.error(xhr.statusText);
     };
     xhr.send(JSON.stringify({
-            TeamId: 1,
-            TeamName: "kek",
-            Categories: categories
-        }));
+        TeamId: parseInt(teamId),
+        TeamName: teamName,
+        Categories: categories
+    }));
 }
 
 function calcRadioCheckedCount(form) {

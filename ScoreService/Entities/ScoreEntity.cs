@@ -25,7 +25,7 @@ namespace ScoreService.Entities
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
 
-                builder.HasOne<ScoreCategoryEntity>()
+                builder.HasOne(p=>p.Category)
                     .WithMany(p => p.Scores)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);

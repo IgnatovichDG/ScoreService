@@ -4,14 +4,14 @@
     ViewBag.Title = "Upload";
     Layout = "_Layout";
 }
-
+<div class="container">
 <form method="post" enctype="multipart/form-data" asp-controller="Import" asp-action="Upload">
     <input asp-for="FileType" type="hidden"/>
     
     @switch (Model.FileType)
     {
         case FileLoadType.Unknown:
-            <label>Неизвестная загрузка)))</label>
+            <label>Неизвестная загрузка</label>
             break;
         case FileLoadType.Users:
             <label>Загрузка пользователей</label>
@@ -25,10 +25,10 @@
         default:
             throw new ArgumentOutOfRangeException();
     }
-    
+    <br/>
     <label> Код защиты от нехороших лиц:</label>
-    <input type="text"  asp-for="ProtectionString"/>
-
+    <input type="password"  asp-for="ProtectionString"/>
+    <br/>
     <label asp-for="File">Файл</label>
     <input asp-for="File" style="border: none; padding-left: 0;" />
     @*<span asp-validation-for="File"></span>*@
@@ -40,3 +40,4 @@
     </button>
 
 </form>
+</div>

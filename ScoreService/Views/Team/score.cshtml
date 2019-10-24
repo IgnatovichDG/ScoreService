@@ -8,8 +8,8 @@
     <div class="team-estimate-view">
         <div id="team-estimate-form">
             <div class="team-list-view__title">@Model.TeamName</div>
-            <input id="teamName" teamName="@Model.TeamName" hidden />
-            <input id="teamId" teamId="@Model.TeamId" hidden />
+            <input id="teamName" tName="@Model.TeamName" hidden />
+            <input id="teamId" tId="@Model.TeamId" hidden />
             <div class="team-estimate-criteria__list">
                 @for (var i = 0; i < Model.Categories.Count; i++)
                 {
@@ -22,23 +22,23 @@
                                     <div class="team-estimate-criteria__title">@Model.Categories[i].Name</div>
                                     <div class="team-estimate-criteria__marks" name="@Model.Categories[i].Name" catId="@Model.Categories[i].Id">
                                         <div class="team-estimate-criteria__mark">
-                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="1" onclick="checkCanSend()">
+                                            <input type="radio" cId="@Model.Categories[i].Id" name="@(Model.Categories[i].Id+"-radio")" value="1" onclick="checkCanSend()">
                                             <span>1</span>
                                         </div>
                                         <div class="team-estimate-criteria__mark">
-                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="2" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <input type="radio" cId="@Model.Categories[i].Id" name="@(Model.Categories[i].Id+"-radio")" value="2"  onclick="checkCanSend()">
                                             <span>2</span>
                                         </div>
                                         <div class="team-estimate-criteria__mark">
-                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="3" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <input type="radio" cId="@Model.Categories[i].Id" name="@(Model.Categories[i].Id+"-radio")" value="3"  onclick="checkCanSend()">
                                             <span>3</span>
                                         </div>
                                         <div class="team-estimate-criteria__mark">
-                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="4" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <input type="radio" cId="@Model.Categories[i].Id" name="@(Model.Categories[i].Id+"-radio")" value="4" onclick="checkCanSend()">
                                             <span>4</span>
                                         </div>
                                         <div class="team-estimate-criteria__mark">
-                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="5" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <input type="radio" cId="@Model.Categories[i].Id" name="@(Model.Categories[i].Id+"-radio")" value="5"  onclick="checkCanSend()">
                                             <span>5</span>
                                         </div>
                                     </div>

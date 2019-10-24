@@ -66,8 +66,7 @@ namespace ScoreService.Migrations
                     UserId = table.Column<long>(nullable: false),
                     TeamId = table.Column<long>(nullable: false),
                     Score = table.Column<string>(nullable: true),
-                    CategoryId = table.Column<long>(nullable: true),
-                    ScoreCategoryEntityId = table.Column<long>(nullable: false)
+                    CategoryId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,12 +74,6 @@ namespace ScoreService.Migrations
                     table.ForeignKey(
                         name: "FK_ScoreEntity_ScoreCategoryEntity_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "ScoreCategoryEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ScoreEntity_ScoreCategoryEntity_ScoreCategoryEntityId",
-                        column: x => x.ScoreCategoryEntityId,
                         principalTable: "ScoreCategoryEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -102,11 +95,6 @@ namespace ScoreService.Migrations
                 name: "IX_ScoreEntity_CategoryId",
                 table: "ScoreEntity",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ScoreEntity_ScoreCategoryEntityId",
-                table: "ScoreEntity",
-                column: "ScoreCategoryEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ScoreEntity_TeamId",

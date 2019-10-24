@@ -14,12 +14,6 @@
             {
                 <div class="team-list-item-view">
                     <div class="team-list-item-view__title">@team.Name</div>
-                    @*@Html.ActionLink(
-                        "Оценить", 
-                        "Score",                         // controller action
-                        "Team",        // controller
-                        team,         // action parameters aka route values
-                        new { @class = "team-list-item-view__button" })*@ 
                     <div class="team-list-item-view__button" onclick='window.location = "@Url.Action("Score", "Team", team)";' >Оценить</div>
                 </div>
             }
