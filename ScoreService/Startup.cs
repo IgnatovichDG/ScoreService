@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ScoreService.Infrastructure;
+using ScoreService.Services;
 
 namespace ScoreService
 {
@@ -32,6 +35,9 @@ namespace ScoreService
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddDbContext<SSDbContext>(options =>
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions
                 {
@@ -39,6 +45,17 @@ namespace ScoreService
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #region Some Register Stuff
+
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHashGenerator, HashSha256Generator>();
+            services.AddScoped<IAppInitializator, AppInitializator>();
+            services.AddScoped<IFileUploadService, FileUploadService>();
+            services.AddScoped<ITeamService, TeamService>();
+
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

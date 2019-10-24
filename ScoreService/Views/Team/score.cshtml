@@ -1,0 +1,65 @@
+﻿@using ScoreService.Entities
+@model ScoreService.ViewModel.ScoreModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="team-estimate-view__container">
+    <div class="team-estimate-view">
+        <form id="team-estimate-form">
+            <div class="team-list-view__title">@Model.TeamName</div>
+            <input id="teamName" teamName="@Model.TeamName" hidden />
+            <input id="teamId" teamId="@Model.TeamId" hidden />
+            <div class="team-estimate-criteria__list">
+                @for (var i = 0; i < Model.Categories.Count; i++)
+                {
+
+                    switch (Model.Categories[i].CategoryKind)
+                    {
+                        case ScoreCategoryKind.Number:
+                            {
+                                <div class="team-estimate-criteria">
+                                    <div class="team-estimate-criteria__title">@Model.Categories[i].Name</div>
+                                    <div class="team-estimate-criteria__marks" name="@Model.Categories[i].Name" catId="@Model.Categories[i].Id">
+                                        <div class="team-estimate-criteria__mark">
+                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="1" onclick="checkCanSend()">
+                                            <span>1</span>
+                                        </div>
+                                        <div class="team-estimate-criteria__mark">
+                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="2" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <span>2</span>
+                                        </div>
+                                        <div class="team-estimate-criteria__mark">
+                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="3" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <span>3</span>
+                                        </div>
+                                        <div class="team-estimate-criteria__mark">
+                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="4" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <span>4</span>
+                                        </div>
+                                        <div class="team-estimate-criteria__mark">
+                                            <input type="radio" name="@(Model.Categories[i].Name+"a")" value="5" asp-for="Categories[i].Value" onclick="checkCanSend()">
+                                            <span>5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            break;
+                        case ScoreCategoryKind.String:
+                            <div class="team-estimate-criteria">
+                                <div class="team-estimate-criteria__area">
+                                    <div class="team-estimate-criteria__title">@Model.Categories[i].Name</div>
+                                    <textarea class="team-estimate-criteria__area__text" name="@Model.Categories[i].Name" catId="@Model.Categories[i].Id"  oninput="checkCanSend()"></textarea>
+                                </div>
+                            </div>
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                }
+            </div>
+            <input type="submit" class="team-estimate__send-button disabled" value="Отправить оценку" onclick="sendData()">
+        </form>
+    </div>
+</div>

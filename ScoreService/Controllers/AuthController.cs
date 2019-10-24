@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ScoreService.Entities;
 using ScoreService.Models;
+using ScoreService.Services;
 using ScoreService.ViewModel;
 
 namespace ScoreService.Controllers
@@ -15,6 +17,12 @@ namespace ScoreService.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public AuthController(IUserService userService)
+        {
+            _userService = userService;
+        }
 
         /// <summary>
         ///     Отобразить страницу входа.
@@ -32,15 +40,10 @@ namespace ScoreService.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = new User()
+                var isExist = await _userService.IsUserExistAsync(model.Login, model.Password);
+                if (isExist)
                 {
-                    Id = 1,
-                    Email = "kek",
-                    Password = "test"
-                };
-                if (user != null)
-                {
-                    await Authenticate(model.Email); // аутентификация
+                    await Authenticate(model.Login); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }

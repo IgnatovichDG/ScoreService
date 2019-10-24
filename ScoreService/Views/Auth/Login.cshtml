@@ -1,28 +1,20 @@
 ﻿@model ScoreService.ViewModel.LoginModel
-@*<div class="validation" asp-validation-summary="ModelOnly"></div>
-    <div>
-        <div class="form-group">
-            <label asp-for="Email">Введите Email</label>
-            <input type="text" asp-for="Email" />
-            <span asp-validation-for="Email"></span>
+
+<div class="login-view__container">
+    <div class="login-view">
+        <div class="login-view__logo">
+            <img src="~/assets/svg/logo.svg">
         </div>
-        <div class="form-group">
-            <label asp-for="Password">Введите пароль</label>
-            <input asp-for="Password" />
-            <span asp-validation-for="Password"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Войти" class="btn" />
-        </div>
-    </div>*@
-<div class="login-page">
-    <div class="form">
-        <form asp-action="Login" asp-controller="Auth" asp-anti-forgery="true" class="login-form">
-            <input type="text"  asp-for="Email" placeholder="username"/>
-            <span asp-validation-for="Email"></span>
-            <input type="password" asp-for="Password" placeholder="password"/>
-            <span asp-validation-for="Password"></span>
-            <input  type="submit" value="Войти" class="btn"/>
+        <form  asp-action="Login" asp-controller="Auth" asp-anti-forgery="true" class="login-view__form">
+            <div class="login-view__user-name--label">Логин</div>
+            <div class="login-view__user-name--field">
+                <input type="text" asp-for="Login" placeholder="username" />
+            </div>
+            <div class="login-view__pass--label">Пароль</div>
+            <div class="login-view__pass--field">
+                <input type="password" asp-for="Password" placeholder="password"/>
+            </div>
+            <input type="submit" class="login-view__button" value="Войти">
         </form>
     </div>
 </div>
