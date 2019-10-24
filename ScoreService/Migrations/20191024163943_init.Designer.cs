@@ -9,8 +9,8 @@ using ScoreService.Infrastructure;
 namespace ScoreService.Migrations
 {
     [DbContext(typeof(SSDbContext))]
-    [Migration("20191024120502_AddIsScored")]
-    partial class AddIsScored
+    [Migration("20191024163943_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,7 +41,7 @@ namespace ScoreService.Migrations
 
                     b.Property<long?>("CategoryId");
 
-                    b.Property<int>("Score");
+                    b.Property<string>("Score");
 
                     b.Property<long>("ScoreCategoryEntityId");
 

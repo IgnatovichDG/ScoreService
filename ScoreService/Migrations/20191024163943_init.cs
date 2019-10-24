@@ -43,7 +43,8 @@ namespace ScoreService.Migrations
                     Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
-                    UserId = table.Column<long>(nullable: false)
+                    UserId = table.Column<long>(nullable: false),
+                    IsScored = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,7 @@ namespace ScoreService.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<long>(nullable: false),
                     TeamId = table.Column<long>(nullable: false),
-                    Score = table.Column<int>(nullable: false),
+                    Score = table.Column<string>(nullable: true),
                     CategoryId = table.Column<long>(nullable: true),
                     ScoreCategoryEntityId = table.Column<long>(nullable: false)
                 },

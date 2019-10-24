@@ -39,7 +39,7 @@ namespace ScoreService.Migrations
 
                     b.Property<long?>("CategoryId");
 
-                    b.Property<int>("Score");
+                    b.Property<string>("Score");
 
                     b.Property<long>("ScoreCategoryEntityId");
 
