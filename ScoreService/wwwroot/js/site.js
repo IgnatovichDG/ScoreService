@@ -18,23 +18,23 @@ function checkCanSend() {
 function sendData() {
     var categories = [];
     var textAreas = document.querySelectorAll('.team-estimate-criteria__area__text');
-    for (var i = 0; i < textAreas.length; i++) {
-        categories.add({
-            Id: textAreas[i].getAttribute('catId'),
-            Name: textAreas[i].getAttribute('name'),
-            Kind: 1,
-            Value: textAreas[i].value
+    textAreas.forEach(p => {
+        console.log(p);
+        categories.push({
+            Id: p.getAttribute('catId'),            
+            Value: p.value
         });
-    }
-    var radioGroups = document.querySelectorAll('.team-estimate-criteria__marks');
-    for (var i = 0; i < radioGroups.length; i++) {
-        categories.add({
-            Id: radioGroups[i].getAttribute('catId'),
-            Name: radioGroups[i].getAttribute('name'),
-            Kind: 0,
-            Value: form.getElementsByTagName('input').first(p=>p.checked).index
     });
-    }
+
+    //var radioGroups = document.querySelectorAll('.team-estimate-criteria__marks');
+    //radioGroups.forEach( p=>
+    //    categories.add({
+    //        Id: p.getAttribute('catId'),
+    //        Name: p.getAttribute('name'),
+    //        Kind: 0,
+    //        Value: form.getElementsByTagName('input').first(p=>p.checked).index
+    //}));
+    //}
 
     var result = {
         TeamId: 0,
@@ -42,8 +42,39 @@ function sendData() {
         Categories: categories
     };
 
-    $post('team/score', result);
+    $.ajax({
+        url: '/team/score',
+        dataType: 'json',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            TeamId: 1,
+            TeamName: "kek",
+            Categories: categories
+        }),
+        processData: false,
+        success: function(data, textStatus, jQxhr) {
+            $(window.location('/'));
+        },
+        error: function(jqXhr, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
 }
+
+    //var xhr = new XMLHttpRequest();
+    //xhr.open("POST", '/team/score', true);
+    //xhr.setRequestHeader('Content-Type', 'application/json');
+    //xhr.onload = function () {
+    //    console.log('kekekke');
+    //    //    window.location('/');
+    //};
+
+    //xhr.send(JSON.stringify({
+    //    TeamId: 1,
+    //    TeamName: "kek",
+    //    Categories: categories
+    //}));
 
 
 function calcRadioCheckedCount(form) {

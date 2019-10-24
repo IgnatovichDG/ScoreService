@@ -6,6 +6,7 @@ using ScoreService.ViewModel;
 
 namespace ScoreService.Controllers
 {
+    [Route("team")]
     public class TeamController : ControllerBase
     {
         private readonly ITeamService _teamService;
@@ -29,11 +30,12 @@ namespace ScoreService.Controllers
             return AutoView(result);
         }
 
-        [HttpPost("Score")]
-        public async Task<IActionResult> Score(ScoreModel model)
+        [HttpPost("score")]
+        public async Task<IActionResult> Score([FromBody]ScoreModel model)
         {
             await Task.Yield();
-            return Redirect("");
+                
+            return Content("/");
         }
     }
 }

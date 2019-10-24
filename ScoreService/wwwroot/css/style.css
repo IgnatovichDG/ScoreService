@@ -91,6 +91,7 @@ html, body {
 
 
 .team-estimate-view {
+    padding: 0 20px;
 }
 
 .team-estimate-view__title {
@@ -201,6 +202,7 @@ html, body {
 
 .team-list-items__container {
     margin-top: 64px;
+    padding: 0 20px;
 }
 
 .team-list-item-view {
