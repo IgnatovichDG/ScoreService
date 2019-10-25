@@ -53,6 +53,7 @@ namespace ScoreService
             services.AddScoped<IAppInitializator, AppInitializator>();
             services.AddScoped<IFileUploadService, FileUploadService>();
             services.AddScoped<ITeamService, TeamService>();
+            services.AddSingleton<ISessionTokenStorageService, SessionTokenStorageService>();
             services.AddScoped<IExportServie, ExportService>();
 
             #endregion

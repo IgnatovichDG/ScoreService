@@ -13,7 +13,7 @@ namespace ScoreService.Controllers
     [Route("import")]
     public class ImportController : ControllerBase
     {
-        private IFileUploadService _fileUploadService;
+        private readonly IFileUploadService _fileUploadService;
 
         public ImportController(IFileUploadService fileUploadService)
         {

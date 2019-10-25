@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScoreService.Entities;
 using ScoreService.Infrastructure;
+using ScoreService.Services;
 using ScoreService.ViewModel;
 
 namespace ScoreService.Controllers
@@ -11,10 +12,12 @@ namespace ScoreService.Controllers
     public class WipeController : ControllerBase
     {
         private readonly SSDbContext _dbContext;
+        private readonly ISessionTokenStorageService _tokenStorageService;
 
-        public WipeController(SSDbContext dbContext)
+        public WipeController(SSDbContext dbContext, ISessionTokenStorageService tokenStorageService)
         {
             _dbContext = dbContext;
+            _tokenStorageService = tokenStorageService;
         }
 
         [HttpGet("iseedeadpeople")]
@@ -39,7 +42,8 @@ namespace ScoreService.Controllers
                 var categories = await _dbContext.Set<ScoreCategoryEntity>().ToListAsync();
                 _dbContext.RemoveRange(categories);
                 await _dbContext.SaveChangesAsync();
-                return Ok(new {status = "Красава ты всё уничтожил!"});
+                _tokenStorageService.RefreshToken();
+                return Ok(new {status = "Красава, ты всё уничтожил!"});
             }
             return AutoView(model);
         }

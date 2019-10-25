@@ -59,8 +59,12 @@ function sendData() {
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                window.location.href = '/';
-            } else {
+                window.location.href = xhr.responseText;
+            }
+            else if (xhr.status === 401) {
+                window.location.href = "/";
+            }
+            else {
                 console.error(xhr.statusText);
             }
         }

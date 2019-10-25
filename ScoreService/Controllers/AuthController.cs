@@ -18,9 +18,10 @@ namespace ScoreService.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-
-        public AuthController(IUserService userService)
+        private readonly ISessionTokenStorageService _tokenStorageService;
+        public AuthController(IUserService userService, ISessionTokenStorageService tokenStorageService)
         {
+            _tokenStorageService = tokenStorageService;
             _userService = userService;
         }
 
@@ -54,10 +55,13 @@ namespace ScoreService.Controllers
 
         private async Task Authenticate(string userName)
         {
+
+            var sessionToken = _tokenStorageService.GetToken();
             // создаем один claim
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim("SessionToken", sessionToken)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
