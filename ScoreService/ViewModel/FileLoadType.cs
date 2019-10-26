@@ -5,6 +5,7 @@
         Unknown,
         Users,
         UserTeam,
-        Categories
+        Categories,
+        Settigns
     }
 }

@@ -76,6 +76,7 @@ namespace ScoreService.Controllers
             }
 
             return AutoView(model);
+
         }
 
     }

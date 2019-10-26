@@ -2,9 +2,11 @@
 {
     public class TeamUploadDto
     {
-        public string Login { get; set; }
-
         public string TeamName { get; set; }
+
+        public string Zone { get; set; }
+
+        public string Address { get; set; }
 
         public bool IsDeleted { get; set; }
     }

@@ -39,6 +39,10 @@ namespace ScoreService.Controllers
             {
                 var users = await _dbContext.Set<UserEntity>().ToListAsync();
                 _dbContext.RemoveRange(users);
+                var teams = await _dbContext.Set<TeamEntity>().ToListAsync();
+                _dbContext.RemoveRange(teams);
+                var settigns = await _dbContext.Set<BindSettingsEntity>().ToListAsync();
+                _dbContext.RemoveRange(settigns);
                 var categories = await _dbContext.Set<ScoreCategoryEntity>().ToListAsync();
                 _dbContext.RemoveRange(categories);
                 await _dbContext.SaveChangesAsync();

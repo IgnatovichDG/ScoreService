@@ -18,24 +18,22 @@ namespace ScoreService.Controllers
     public class HomeController : Controller
     {
         private readonly IUserService _userService;
-        private readonly ISessionTokenStorageService _tokenStorageService;
 
         public HomeController(IUserService userService, ISessionTokenStorageService tokenStorageService)
         {
             _userService = userService;
-            _tokenStorageService = tokenStorageService;
         }
 
         [Authorize]
         [SessionTokenFilter]
         public async Task<IActionResult> Index()
         {
-            var sessionToken = User.Claims.FirstOrDefault(p => p.Type == "SessionToken");
             var user = User.Identity.Name;
             var teams = await _userService.GetTeamsAsync(user);
             var result = teams.Select(p => new TeamModel
             {
                 Name = p.Name,
+                Address = p.Address,
                 Id = p.Id
             }).ToList();
 

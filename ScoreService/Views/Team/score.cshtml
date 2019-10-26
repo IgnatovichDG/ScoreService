@@ -7,7 +7,7 @@
 <div class="team-estimate-view__container">
     <div class="team-estimate-view">
         <div id="team-estimate-form">
-            <div class="team-list-view__title">@Model.TeamName</div>
+            <div class="team-list-view__title">@(Model.TeamName + "(" + Model.Address + ")")</div>
             <input id="teamName" tName="@Model.TeamName" hidden />
             <input id="teamId" tId="@Model.TeamId" hidden />
             <div class="team-estimate-criteria__list">

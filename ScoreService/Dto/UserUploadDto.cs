@@ -6,6 +6,8 @@
 
         public string Password { get; set; }
 
+        public string Zone { get; set; }
+
         public bool IsDeleted { get; set; }
        
     }

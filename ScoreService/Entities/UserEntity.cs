@@ -14,16 +14,22 @@ namespace ScoreService.Entities
 
         public string PasswordHash { get; set; }
 
-        public ICollection<TeamEntity> ScoredTeams { get; set; }
-
+        public ZoneEntity Zone { get; set; }
+       
         public ICollection<ScoreEntity> Scores { get; set; }
+
+        public ICollection<UserTeamRelation> ScoredTeams { get; set; }
 
         internal class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
         {
             /// <inheritdoc />
             public void Configure(EntityTypeBuilder<UserEntity> builder)
             {
-
+                builder
+                    .HasOne(p => p.Zone)
+                    .WithMany(p => p.Users)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
             }
         }
     }

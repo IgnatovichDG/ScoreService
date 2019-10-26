@@ -13,7 +13,7 @@
             @foreach (var team in Model.Teams)
             {
                 <div class="team-list-item-view">
-                    <div class="team-list-item-view__title">@team.Name</div>
+                    <div class="team-list-item-view__title">@(team.Name+"("+team.Address+")")</div>
                     <div class="team-list-item-view__button" onclick='window.location = "@Url.Action("Score", "Team", team)";' >Оценить</div>
                 </div>
             }

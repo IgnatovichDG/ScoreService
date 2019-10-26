@@ -10,11 +10,6 @@ using ScoreService.Infrastructure;
 
 namespace ScoreService.Services
 {
-    public interface IExportServie
-    {
-        Task<FileExportDto> GetReportAsync();
-    }
-
     public class ExportService : IExportServie
     {
         private readonly SSDbContext _dbContext;
@@ -30,14 +25,15 @@ namespace ScoreService.Services
 
             var worksheet = workbook.Worksheets.Add("Отчёт по оценкам.");
 
-            var data = await _dbContext.Set<TeamEntity>()
-                .Where(p => p.IsScored)
+            var data = await _dbContext.Set<UserTeamRelation>()
+                .Where(p=>p.IsScored)
                 .Select(p => new
                 {
                     UserId = p.User.Id,
+                    TeamAddress= p.Team.Address,
                     UserName = p.User.Login,
-                    TeamName = p.Name,
-                    Scores = p.Score.Select(t => new
+                    TeamName = p.Team.Name,
+                    Scores = p.Team.Score.Select(t => new
                     {
                         t.Category.Id,
                         t.Category.Name,
@@ -51,7 +47,9 @@ namespace ScoreService.Services
             StyleHeaderCell(worksheet.Cell(1, 1));
             worksheet.Cell(1, 2).Value = "Название команды";
             StyleHeaderCell(worksheet.Cell(1, 2));
-            var headerIndex = 3;
+            worksheet.Cell(1, 2).Value = "Адрес команды";
+            StyleHeaderCell(worksheet.Cell(1, 3));
+            var headerIndex = 4;
             foreach (var score in data.First().Scores)
             {
                 worksheet.Cell(1, headerIndex).Value = score.Name;
@@ -66,8 +64,10 @@ namespace ScoreService.Services
                 worksheet.Cell(row, 1).Value = record.UserName;
                 StyleCell(worksheet.Cell(row, 1));
                 worksheet.Cell(row, 2).Value = record.TeamName;
-                StyleCell(worksheet.Cell(row, 2));         
-                var contentIndex = 3;
+                StyleCell(worksheet.Cell(row, 2));
+                worksheet.Cell(row, 2).Value = record.TeamAddress;
+                StyleCell(worksheet.Cell(row, 3));
+                var contentIndex = 4;
                 foreach (var score in record.Scores)
                 {
                     worksheet.Cell(row, contentIndex).Value = score.Value;
@@ -94,6 +94,53 @@ namespace ScoreService.Services
             }
 
 
+        }
+
+        public async Task<FileExportDto> GetUserTeamsBinds()
+        {
+            var workbook = new XLWorkbook();
+
+            var worksheet = workbook.Worksheets.Add("Связка юзер - команда");
+
+            var data =  await _dbContext.Set<UserTeamRelation>().Select(p => new {p.User.Login, p.Team.Name, p.Team.Address}).ToListAsync();
+
+            #region Make Header
+
+            worksheet.Cell(1, 1).Value = "Имя пользователя";
+            StyleHeaderCell(worksheet.Cell(1, 1));
+            worksheet.Cell(1, 2).Value = "Адрес команды";
+            StyleHeaderCell(worksheet.Cell(1, 2));
+            worksheet.Cell(1, 3).Value = "Название команды";
+            StyleHeaderCell(worksheet.Cell(1, 3));
+            #endregion
+
+            var row = 2;
+            foreach (var record in data)
+            {
+                worksheet.Cell(row, 1).Value = record.Login;
+                StyleCell(worksheet.Cell(row, 1));
+                worksheet.Cell(row, 2).Value = record.Address;
+                StyleCell(worksheet.Cell(row, 2));
+                worksheet.Cell(row, 2).Value = record.Name;
+                StyleCell(worksheet.Cell(row, 3));
+            
+                row++;
+            }
+
+            worksheet.Columns().AdjustToContents();
+
+            using (var ms = new MemoryStream())
+            {
+                workbook.SaveAs(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                var content = ms.ToArray();
+                return new FileExportDto()
+                {
+                    Name = $"UserTeam-{DateTime.Now}",
+                    Content = content
+                };
+            }
         }
 
         private void StyleHeaderCell(IXLCell cell)

@@ -41,10 +41,10 @@ namespace ScoreService.Controllers
         {
             if (ModelState.IsValid)
             {
-                var isExist = await _userService.IsUserExistAsync(model.Login, model.Password);
-                if (isExist)
+                var user = await _userService.IsUserExistAsync(model.Login, model.Password);
+                if (user != null)
                 {
-                    await Authenticate(model.Login); // аутентификация
+                    await Authenticate(user.Login); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }

@@ -8,6 +8,8 @@ namespace ScoreService.ViewModel
     {
         public string TeamName { get; set; }
 
+        public string Address { get; set; }
+
         public long TeamId { get; set; }
 
         [BindProperty]

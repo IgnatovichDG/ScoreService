@@ -6,8 +6,10 @@ namespace ScoreService.Services
 {
     public interface ITeamService
     {
-        Task<bool> IsScoredAsync(long teamId);
+        Task<bool> IsScoredAsync(string login, long teamId);
         Task<ICollection<ScoreCategoryModel>> GetCategoriesAsync();
         Task SaveScoreAsync(ScoreModel model, string login);
+        Task BindTeamsToUser();
+        Task RemoveBindings();
     }
 }

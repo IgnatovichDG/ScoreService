@@ -20,10 +20,4 @@ namespace ScoreService.Services
             return _sessionToken.ToString();
         }
     }
-
-    public interface ISessionTokenStorageService
-    {
-        void RefreshToken();
-        string GetToken();
-    }
 }

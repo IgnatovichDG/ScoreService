@@ -23,31 +23,32 @@ namespace ScoreService.Services
 
         //public async Task<ICollection<TeamEntity>>
 
-        public async Task<bool> IsUserExistAsync(string login, string password)
+        public async Task<UserEntity> IsUserExistAsync(string login, string password)
         {
             var user = await _context.Set<UserEntity>().FirstOrDefaultAsync(p => p.Login.ToLower() == login.ToLower());
             if (user == null)
-                return false;
+                return null;
             var paswordHash = _hashGenerator.ComputePasswordHash(password, user.PasswordSalt);
             if (string.Equals(paswordHash, user.PasswordHash))
             {
-                return true;
+                return user;
             }
 
-            return false;
+            return null;
         }
 
-        public async Task SaveUser(string login, string password)
+        public async Task SaveUser(string login, string password, string zone)
         {
 
             var salt = Guid.NewGuid().ToString("N");
             var passwordHash = _hashGenerator.ComputePasswordHash(password, salt);
-
+            var zoneEntity = await _context.Set<ZoneEntity>().FirstAsync(p => p.Name == zone);
             await _context.AddAsync(new UserEntity()
             {
                 Login = login,
                 PasswordHash = passwordHash,
-                PasswordSalt = salt
+                PasswordSalt = salt,
+                Zone = zoneEntity
             });
 
             await _context.SaveChangesAsync();
@@ -68,11 +69,12 @@ namespace ScoreService.Services
 
         public async Task<ICollection<TeamDto>> GetTeamsAsync(string login)
         {
-            var teams =  await _context.Set<TeamEntity>().Where(p=>p.User.Login == login && !p.IsScored).Select(p=> new TeamDto()
+            var teams =  await _context.Set<TeamEntity>().Where(p=>p.Users.Any(t=> t.User.Login == login && !t.IsScored)).Select(p=> new TeamDto()
             {
                 Id = p.Id,
                 Name = p.Name,
-                IsScored = p.IsScored
+                Address = p.Address,
+                IsScored = false
             }).ToListAsync();
             return teams;
         }

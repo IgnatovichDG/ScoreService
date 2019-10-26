@@ -16,7 +16,7 @@ namespace ScoreService.Services
         private readonly SSDbContext _context;
         
 
-        public FileUploadService(IUserService userService, SSDbContext context)
+        public FileUploadService(IUserService userService, ITeamService teamService, SSDbContext context)
         {
             _userService = userService;
             _context = context;
@@ -34,9 +34,33 @@ namespace ScoreService.Services
                     break;
                 case FileLoadType.Categories:
                     await UploadCategoriesAsync(content);
-                    break;                   
+                    break;
+                case FileLoadType.Settigns:
+                    await UploadSettingsAsync(content);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fileLoadType), fileLoadType, null);
+            }
+        }
+
+        private async Task UploadSettingsAsync(byte[] content)
+        {
+            var settings = await _context.Set<BindSettingsEntity>().FirstOrDefaultAsync();
+            if (settings != null)
+            {
+                _context.Remove(settings);
+                await _context.SaveChangesAsync();
+            }
+            using (var ms = new MemoryStream(content))
+            {
+                var worsheet = new XLWorkbook(ms).Worksheet(1);
+                var row = worsheet.Row(2);
+                await _context.AddAsync(new BindSettingsEntity()
+                {
+                    MaxTeamForUserCounter = row.Cell(1).GetValue<int>(),
+                    MinUsersForTeamCounter = row.Cell(2).GetValue<int>()
+                });
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -98,9 +122,9 @@ namespace ScoreService.Services
                     {
                         Login = row.Cell(1).GetValue<string>(),
                         Password = row.Cell(2).GetValue<string>(),
+                        Zone = row.Cell(3).GetValue<string>(),
                         IsDeleted = row.Cell(3).GetValue<string>() == "Y"
-                    };
-
+                    };                  
                     var userEntity = await _context.Set<UserEntity>().FirstOrDefaultAsync(p => p.Login == userDto.Login);
                     if (userEntity != null)
                     {
@@ -116,7 +140,7 @@ namespace ScoreService.Services
                     }
                     else
                     {
-                        await _userService.SaveUser(userDto.Login, userDto.Password);
+                        await _userService.SaveUser(userDto.Login, userDto.Password, userDto.Zone);
                     }
                 }
             }
@@ -133,20 +157,25 @@ namespace ScoreService.Services
                         continue;
                     var teamDto = new TeamUploadDto()
                     {
-                        Login = row.Cell(1).GetValue<string>(),
+                        Address = row.Cell(1).GetValue<string>(),
                         TeamName = row.Cell(2).GetValue<string>(),
                         IsDeleted = row.Cell(3).GetValue<string>() == "Y"
                     };
 
-                    var userEntity = await _context.Set<UserEntity>().FirstOrDefaultAsync(p => p.Login == teamDto.Login);
-                    if (userEntity == null)
-                        continue;
-                    var teamEntity = await _context.Set<TeamEntity>().FirstOrDefaultAsync(p => p.Name == teamDto.TeamName && p.User.Login == userEntity.Login);
+                    var zoneName = teamDto.Address[0];
+                    var zoneEntity = await _context.Set<ZoneEntity>().FirstAsync(p => p.Name == zoneName.ToString());
+                    var teamEntity = await _context.Set<TeamEntity>().FirstOrDefaultAsync(p => p.Address == teamDto.Address);
                     if (teamEntity != null)
                     {
                         if (teamDto.IsDeleted)
                         {
                             _context.Remove(teamEntity);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            teamEntity.Name = teamDto.TeamName;
+                            _context.Update(teamEntity);
                             await _context.SaveChangesAsync();
                         }
                     }
@@ -155,7 +184,8 @@ namespace ScoreService.Services
                         await _context.AddAsync(new TeamEntity()
                         {
                             Name = teamDto.TeamName,
-                            User = userEntity,
+                            Zone = zoneEntity,
+                            Address = teamDto.Address,                           
                         });
                         await _context.SaveChangesAsync();
                     }

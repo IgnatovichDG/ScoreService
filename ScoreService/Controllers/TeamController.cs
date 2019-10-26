@@ -13,13 +13,13 @@ namespace ScoreService.Controllers
     [Route("team")]
     public class TeamController : ControllerBase
     {
-        private readonly ISessionTokenStorageService _tokenStorageService;
         private readonly ITeamService _teamService;
+        private readonly IExportServie _exportServie;
 
-        public TeamController(ITeamService teamService, ISessionTokenStorageService tokenStorageService)
+        public TeamController(ITeamService teamService, ISessionTokenStorageService tokenStorageService, IExportServie exportServie)
         {
+            _exportServie = exportServie;
             _teamService = teamService;
-            _tokenStorageService = tokenStorageService;
         }
 
         [HttpGet("score")]
@@ -31,6 +31,7 @@ namespace ScoreService.Controllers
             {
                 TeamId = model.Id,
                 TeamName = model.Name,
+                Address = model.Address,
                 Categories = categories.ToList()
             };
             return AutoView(result);
@@ -43,6 +44,18 @@ namespace ScoreService.Controllers
             var login = User.Identity.Name;
             await _teamService.SaveScoreAsync(model, login);
             return Ok("/");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("reshuffle")]
+        public async Task<IActionResult> ReshuffleTeams()
+        {
+
+            await _teamService.RemoveBindings();
+            await _teamService.BindTeamsToUser();
+            var result  = await _exportServie.GetUserTeamsBinds();
+            return File(result.Content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{result.Name}.xlsx");
+            
         }
     }
 }
