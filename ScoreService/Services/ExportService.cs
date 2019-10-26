@@ -47,7 +47,7 @@ namespace ScoreService.Services
             StyleHeaderCell(worksheet.Cell(1, 1));
             worksheet.Cell(1, 2).Value = "Название команды";
             StyleHeaderCell(worksheet.Cell(1, 2));
-            worksheet.Cell(1, 2).Value = "Адрес команды";
+            worksheet.Cell(1, 3).Value = "Адрес команды";
             StyleHeaderCell(worksheet.Cell(1, 3));
             var headerIndex = 4;
             foreach (var score in data.First().Scores)
@@ -65,7 +65,7 @@ namespace ScoreService.Services
                 StyleCell(worksheet.Cell(row, 1));
                 worksheet.Cell(row, 2).Value = record.TeamName;
                 StyleCell(worksheet.Cell(row, 2));
-                worksheet.Cell(row, 2).Value = record.TeamAddress;
+                worksheet.Cell(row, 3).Value = record.TeamAddress;
                 StyleCell(worksheet.Cell(row, 3));
                 var contentIndex = 4;
                 foreach (var score in record.Scores)
@@ -121,7 +121,7 @@ namespace ScoreService.Services
                 StyleCell(worksheet.Cell(row, 1));
                 worksheet.Cell(row, 2).Value = record.Address;
                 StyleCell(worksheet.Cell(row, 2));
-                worksheet.Cell(row, 2).Value = record.Name;
+                worksheet.Cell(row, 3).Value = record.Name;
                 StyleCell(worksheet.Cell(row, 3));
             
                 row++;
