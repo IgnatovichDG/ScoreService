@@ -6,6 +6,7 @@
         Users,
         UserTeam,
         Categories,
-        Settigns
+        Settigns,
+        Result
     }
 }

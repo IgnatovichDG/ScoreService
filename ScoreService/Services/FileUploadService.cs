@@ -43,6 +43,8 @@ namespace ScoreService.Services
             }
         }
 
+        
+
         private async Task UploadSettingsAsync(byte[] content)
         {
             var settings = await _context.Set<BindSettingsEntity>().FirstOrDefaultAsync();

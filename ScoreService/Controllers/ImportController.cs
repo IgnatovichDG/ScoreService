@@ -14,10 +14,12 @@ namespace ScoreService.Controllers
     public class ImportController : ControllerBase
     {
         private readonly IFileUploadService _fileUploadService;
+        private readonly IExportServie _exportServie;
 
-        public ImportController(IFileUploadService fileUploadService)
+        public ImportController(IFileUploadService fileUploadService, IExportServie exportServie)
         {
             _fileUploadService = fileUploadService;
+            _exportServie = exportServie;
         }
 
         [HttpGet("upload")]
@@ -56,12 +58,19 @@ namespace ScoreService.Controllers
             {
 
                 try
-                {
+                {                
                     byte[] fileContent;
                     using (var ms = new MemoryStream())
                     {
                         await model.File.CopyToAsync(ms, ct);
                         fileContent = ms.ToArray();
+                    }
+                    if (model.FileType == FileLoadType.Result)
+                    {
+                        var file =_exportServie.GetResults(fileContent);
+                        return File(file.Content,
+                            "application / vnd.openxmlformats - officedocument.spreadsheetml.sheet",
+                            $"{file.Name}.xlsx");
                     }
                     await _fileUploadService.UploadAsync(model.FileType, fileContent);
                     var result = new { status = "Данные успешно загружены!" };

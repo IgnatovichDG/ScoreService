@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,44 @@ namespace ScoreService.Services
         public ExportService(SSDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public FileExportDto GetResults(byte[] content)
+        {
+            using (var ms = new MemoryStream(content))
+            {
+                var worsheet = new XLWorkbook(ms).Worksheet(1);
+                var data = worsheet.RowsUsed().Select(row => (row.Cell(1).GetValue<string>(), row.Cell(2).GetValue<int>())).ToList();
+
+                var result = data.GroupBy(p => p.Item1)
+                    .Select(p => new {Address = p.Key, Score = p.Select(t=>t.Item2).Average()});
+
+                var resultWorkbook = new XLWorkbook();
+                var resultWorksheet = resultWorkbook.Worksheets.Add("Отчёт по оценкам.");
+
+                var rowIndex = 1;
+                foreach (var record in result)
+                {
+                    resultWorksheet.Cell(rowIndex, 1).Value = record.Address;
+                    resultWorksheet.Cell(rowIndex, 2).Value = record.Score;
+                    rowIndex++;
+                }
+
+                resultWorksheet.Columns().AdjustToContents();
+
+                using (var ms2 = new MemoryStream())
+                {
+                    resultWorkbook.SaveAs(ms2);
+                    ms.Seek(0, SeekOrigin.Begin);
+
+                    var resultContent = ms.ToArray();
+                    return new FileExportDto()
+                    {
+                        Name = $"ScoreTotal-{DateTime.Now}",
+                        Content = resultContent
+                    };
+                }
+            }
         }
 
         public async Task<FileExportDto> GetReportAsync()

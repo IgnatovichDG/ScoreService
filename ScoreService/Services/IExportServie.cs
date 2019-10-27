@@ -7,5 +7,6 @@ namespace ScoreService.Services
     {
         Task<FileExportDto> GetReportAsync();
         Task<FileExportDto> GetUserTeamsBinds();
+        FileExportDto GetResults(byte[] content);
     }
 }
