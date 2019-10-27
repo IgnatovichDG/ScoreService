@@ -25,19 +25,31 @@ namespace ScoreService.Services
             using (var ms = new MemoryStream(content))
             {
                 var worsheet = new XLWorkbook(ms).Worksheet(1);
-                var data = worsheet.RowsUsed().Select(row => (row.Cell(1).GetValue<string>(), row.Cell(2).GetValue<int>())).ToList();
+                var data = worsheet.RowsUsed().Select(row => (row.Cell(1).GetValue<string>(), row.Cell(2).GetValue<double>())).ToList();
+            
 
-                var result = data.GroupBy(p => p.Item1)
-                    .Select(p => new {Address = p.Key, Score = p.Select(t=>t.Item2).Average()});
+                var result = new Dictionary<string, List<double>>();
+
+                foreach (var tuple in data)
+                {
+                    if (result.ContainsKey(tuple.Item1)) 
+                        result[tuple.Item1].Add(tuple.Item2);
+                    else
+                    {
+                        result.Add(tuple.Item1, new List<double>(){tuple.Item2});
+                    }
+                }
+
 
                 var resultWorkbook = new XLWorkbook();
                 var resultWorksheet = resultWorkbook.Worksheets.Add("Отчёт по оценкам.");
 
+
                 var rowIndex = 1;
                 foreach (var record in result)
                 {
-                    resultWorksheet.Cell(rowIndex, 1).Value = record.Address;
-                    resultWorksheet.Cell(rowIndex, 2).Value = record.Score;
+                    resultWorksheet.Cell(rowIndex, 1).Value = record.Key;
+                    resultWorksheet.Cell(rowIndex, 2).Value = record.Value.Average();
                     rowIndex++;
                 }
 
@@ -46,9 +58,9 @@ namespace ScoreService.Services
                 using (var ms2 = new MemoryStream())
                 {
                     resultWorkbook.SaveAs(ms2);
-                    ms.Seek(0, SeekOrigin.Begin);
+                    ms2.Seek(0, SeekOrigin.Begin);
 
-                    var resultContent = ms.ToArray();
+                    var resultContent = ms2.ToArray();
                     return new FileExportDto()
                     {
                         Name = $"ScoreTotal-{DateTime.Now}",

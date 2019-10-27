@@ -69,7 +69,7 @@ namespace ScoreService.Controllers
                     {
                         var file =_exportServie.GetResults(fileContent);
                         return File(file.Content,
-                            "application / vnd.openxmlformats - officedocument.spreadsheetml.sheet",
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                             $"{file.Name}.xlsx");
                     }
                     await _fileUploadService.UploadAsync(model.FileType, fileContent);
